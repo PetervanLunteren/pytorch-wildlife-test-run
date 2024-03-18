@@ -1,6 +1,6 @@
 # This script to test if AI4G models can be deployed using the EcoAssist workflow
 # Below you can find a minimal reproducable example
-# You test it yourself by cloning the repo
+# You can test it yourself by cloning the repo
 # Feel free to PR with adjustments
 
 # EcoAssist works with the following workflow to classify animals:
@@ -33,7 +33,7 @@ classification_model = pw_classification.AI4GAmazonRainforest(weights = "AI4GAma
 # output: cropped image <class 'PIL.Image.Image'>
 # each developer has its own way of padding, squaring, cropping, resizing etc
 # it eneeds to happen exactly th same as on which the model was trained
-# QUESTION: the function below is just an example - could you share the code which was used to crop the animals during training?
+# ISSUE: the function below is just an example - could you share the code which was used to crop the animals during training?
 def get_crop(img, bbox_norm):
     img_w, img_h = img.size
     xmin = int(bbox_norm[0] * img_w)
@@ -59,7 +59,7 @@ def get_crop(img, bbox_norm):
 # for the ecoassist workflow we need to define a function that takes a cropped image and returns a list of all classes with their associated predictions
 # input: cropped PIL image
 # output: unsorted classifications formatted as [['aardwolf', 2.3025326090220233e-09], ['african wild cat', 5.658252888451898e-08], ... ]
-# QUESTION: The code below will provide only the class with highest confidence. Is it possible to get all classes and their associated confidences? Something like:
+# ISSUE: The code below will provide only the class with highest confidence. Is it possible to get all classes and their associated confidences? Something like:
 # [['Dasyprocta', 0.001], ['Bos', 0.002], ['Pecari', 0.0005], ['Mazama', 0.746], ['Cuniculus', 0.023], ['Leptotila', 0.0045], ...]
 def get_prediction(PIL_crop):
     transform = transforms.ToTensor()
