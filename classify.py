@@ -23,7 +23,11 @@ import torchvision.transforms as transforms
 import json
 
 # load classifier from local file
-classification_model = pw_classification.AI4GAmazonRainforest(weights = "AI4GAmazonClassification_v0.0.0.ckpt")
+try:
+    classification_model = pw_classification.AI4GAmazonRainforest(weights = "AI4GAmazonClassification_v0.0.0.ckpt")
+except FileNotFoundError:
+    print(f"Please download the model file from the url below and place it in the dir {dname}.\n")
+    print("https://zenodo.org/records/10042023/files/AI4GAmazonClassification_v0.0.0.ckpt?download=1")
 
 # method of cropping
 # for the ecoassist workflow we need to define a function that crops and pads the images from the bounding 
