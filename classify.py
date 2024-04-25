@@ -21,6 +21,8 @@ from PytorchWildlife.models import classification as pw_classification
 from PIL import Image, ImageOps
 import torchvision.transforms as transforms
 import json
+import supervision as sv
+import numpy as np
 
 # load classifier from local file
 try:
@@ -40,24 +42,16 @@ except FileNotFoundError:
 # it eneeds to happen exactly th same as on which the model was trained
 # ISSUE: the function below is just an example - could you share the code which was used to crop the animals during training?
 def get_crop(img, bbox_norm):
-    img_w, img_h = img.size
-    xmin = int(bbox_norm[0] * img_w)
-    ymin = int(bbox_norm[1] * img_h)
-    box_w = int(bbox_norm[2] * img_w)
-    box_h = int(bbox_norm[3] * img_h)
-    box_size = max(box_w, box_h)
-    xmin = max(0, min(
-        xmin - int((box_size - box_w) / 2),
-        img_w - box_w))
-    ymin = max(0, min(
-        ymin - int((box_size - box_h) / 2),
-        img_h - box_h))
-    box_w = min(img_w, box_size)
-    box_h = min(img_h, box_size)
-    if box_w == 0 or box_h == 0:
-        return
-    crop = img.crop(box=[xmin, ymin, xmin + box_w, ymin + box_h])
-    crop = ImageOps.pad(crop, size=(box_size, box_size), color=0)
+
+    # convert bbox to int
+    img_width, img_height = img.size
+    left = int(round(bbox_norm[0] * img_width))
+    top = int(round(bbox_norm[1] * img_height))
+    right = int(round(bbox_norm[2] * img_width)) + left
+    bottom = int(round(bbox_norm[3] * img_height)) + top
+
+    # crop using supervision method
+    crop = Image.fromarray(sv.crop_image(np.array(img.convert("RGB")), xyxy = [left, top, right, bottom]))
     return crop
 
 # predict from cropped image
